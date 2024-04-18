@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  api:
+    build: Api/
+    ports:
+      - 6069:6069
+    depends_on:
+      - user_svc
+    network_mode: host
+  user_svc:
+    build: microservices/user-svc/
+    ports:
+      - 3001:3001
+    network_mode: host

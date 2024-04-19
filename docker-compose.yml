@@ -1,15 +1,44 @@
-version: "3"
+version: "3.8"
 
 services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=hahaton
+      - POSTGRES_PASSWORD=hahaton
+      - POSTGRES_DB=hahaton
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
   api:
-    build: Api/
+    build:
+      context: ./Api
+    container_name: api
+    environment:
+      HOST: "user-svc:3001"
     ports:
-      - 6069:6069
+      - "6069:6069"
+
+  user-svc:
+    build:
+      context: ./microservices/user-svc
+    container_name: user-svc
     depends_on:
-      - user_svc
-    network_mode: host
-  user_svc:
-    build: microservices/user-svc/
+      - postgres
+    environment:
+      DATABASE_URL: "postgresql://hahaton:hahaton@postgres:5432/hahaton"
+      MAIL_HOST: "smtp.gmail.com"
+      MAIL_USER: "fakeroot94@gmail.com"
+      MAIL_PASSWORD: "memm cchg tscz gioi"
+      MAIL_FROM: "fakeroot94@gmail.com"
+      CODE_EXP: 10
+      JWT_SECRET: "qdwH23rvrvww3r4r3"
+      JWT_EXP: "1d"
     ports:
-      - 3001:3001
-    network_mode: host
+      - "3001:3001"
+
+volumes:
+  pg_data:

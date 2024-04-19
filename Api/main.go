@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	routes_auth "root/routes/auth"
 	"sync"
 
@@ -24,7 +25,7 @@ func initGRPCClient() {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		conn, err := grpc.NewClient("127.0.0.1:3001", grpc.WithTransportCredentials(insecure.NewCredentials()))
+		conn, err := grpc.NewClient(os.Getenv("HOST"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			log.Fatalf("не получилось соединиться: %v", err)
 		}

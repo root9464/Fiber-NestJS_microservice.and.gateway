@@ -1,4 +1,4 @@
-FROM node
+FROM node:latest
 
 WORKDIR /user_svc
 
@@ -8,4 +8,5 @@ RUN yarn install
 
 EXPOSE 3001
 
-CMD [ "yarn", "start" ]
+CMD npx prisma migrate dev --name init \
+    && yarn start
